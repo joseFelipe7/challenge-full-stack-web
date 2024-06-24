@@ -24,6 +24,7 @@ export class PrismaUserRepository implements IUserRepository{
       data: {
         name: user.props.name,
         password: user.props.password,
+        deleted_at: user.props.deletedAt,
       },
     })
     return user ? User.create(userUpdate, userUpdate.id):null

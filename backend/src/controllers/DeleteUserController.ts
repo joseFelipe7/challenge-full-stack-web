@@ -1,14 +1,14 @@
 import { Request, Response } from "express";
 import { UserResponse } from "@/response/UserResponse";
-import updateUserRequest from "@/validators/updateUserRequest";
-import { updateUserFactory } from "@/useCases/factories/updateUserFactory";
+import deleteUserRequest from "@/validators/deleteUserRequest";
+import { deleteUserFactory } from "@/useCases/factories/deleteUserFactory";
 import { UserNotFoundError } from "@/useCases/errors/UserNotFoundError";
 
 
-export class UpdateUserController {
+export class DeleteUserController {
     execute = async (request:Request, response:Response) => {
 
-      const validate = updateUserRequest.validate({id:request.params.id, ...request.body})
+      const validate = deleteUserRequest.validate({id:request.params.id, ...request.body})
        
       if(validate.error) return response.status(422).json({ 
                                                             errors:validate.error.details, 
@@ -18,15 +18,14 @@ export class UpdateUserController {
       try {
         const requestData = validate.value
         const id = request.params.id
-        const updateUser = updateUserFactory()
+        const deleteUser = deleteUserFactory()
 
-        const user = await updateUser.execute(id, requestData)
+        const user = await deleteUser.execute(id)
 
         if(user){
-          return response.status(200).json({data: UserResponse.index(user), message:'updated with success'});
+          return response.status(204).json({data: UserResponse.index(user), message:'deleted with success'});
         }
-        return response.json({data: 'ocorreu ao editar o usuario'});
-        
+        return response.json({data: 'ocorreu um erro ao excluir o usuario'});
         
       } catch (error: any) {
         if (error instanceof UserNotFoundError)
