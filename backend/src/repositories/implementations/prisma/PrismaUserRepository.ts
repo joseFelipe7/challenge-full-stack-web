@@ -1,6 +1,7 @@
 import { prismaClient } from "@/database/prismaClient";
-import { IUserRepository } from "@/repositories/IUserRepository";
+import { IUserRepository, userRepository } from "@/repositories/IUserRepository";
 import { User } from "@/domain/entities/User";
+import { list } from "@/domain/types/list";
 
 export class PrismaUserRepository implements IUserRepository{
   async create(user: User): Promise<User | null> {
@@ -27,6 +28,27 @@ export class PrismaUserRepository implements IUserRepository{
     })
     return user ? User.create(userUpdate, userUpdate.id):null
   }
+  async list (where:object, perPage:number, page:number):Promise<list<userRepository>>{
+    const results = await prismaClient.$transaction([
+      prismaClient.user.count({ where: where }),
+      prismaClient.user.findMany({
+        skip: ((page-1)*perPage),
+        take: perPage,
+        where: where,
+        orderBy: {
+          created_at: 'desc',
+        },
+      }),
+    ])
+    if(results){
+      const [count, data] = results
+      return {
+        count: count,
+        data: data
+      }
+    }
+    return { count: 0, data: [] }
+  };
   async findByEmail(email: string):Promise<User | null>{
     const user = await prismaClient.user.findUnique({
       where: {

@@ -1,4 +1,7 @@
 import { User } from "@/domain/entities/User"
+import { list } from "@/domain/types/list";
+import { paginate } from "@/domain/types/paginate";
+import { userRepository } from "@/repositories/IUserRepository";
 
 type AttributesReturn = {
   type:string,
@@ -26,13 +29,28 @@ export class UserResponse {
       }
     }
   }
-  static collection(users:Array<User>):Array<AttributesReturn>{
+  static paginate(listUsers:list<userRepository>, perPage:number, page:number):paginate<AttributesReturn>{
+    const {count:total, data:list} = listUsers
+    const meta = {
+      total:total,
+      page:page,
+      per_page:perPage,
+      first_page:1,
+      last_page:Math.ceil(total/perPage)
+    }
+    const data = list
+    return {
+      meta,
+      data:this.collection(data)
+    }
+  }
+  static collection(users:Array<userRepository>):Array<AttributesReturn>{
     return users.map(item=>{
       return {
         type:this.type,
         attributes:{
-          name: item.props.name,
-          email: item.props.email
+          name: item.name,
+          email: item.email
         }
       }
     })
