@@ -1,6 +1,12 @@
+import { Theme } from "@radix-ui/themes";
+import "@radix-ui/themes/styles.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+
+import "@radix-ui/themes/components.css";
+import "@radix-ui/themes/tokens.css";
+import "@radix-ui/themes/utilities.css";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -16,7 +22,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body className={inter.className}>
+        <Theme accentColor="crimson" grayColor="sand" radius="medium">
+          {children}
+        </Theme>
+      </body>
     </html>
   );
 }
