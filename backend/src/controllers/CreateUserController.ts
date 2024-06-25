@@ -1,11 +1,14 @@
+import { CustomRequest } from "@/core/Request";
+import { Actions } from "@/domain/entities/Log";
 import { UserResponse } from "@/response/UserResponse";
 import { UserAlreadyExistsError } from "@/useCases/errors/UserAlreadyExistsError";
 import { createUserFactory } from "@/useCases/factories/createUserFactory";
+import { audit } from "@/utils";
 import createUserRequest from "@/validators/createUserRequest";
-import { Request, Response } from "express";
+import { Response } from "express";
 
 export class CreateUserController {
-  execute = async (request: Request, response: Response) => {
+  execute = async (request: CustomRequest, response: Response) => {
     const validate = createUserRequest.validate(request.body);
 
     if (validate.error)
@@ -22,12 +25,16 @@ export class CreateUserController {
       const user = await createUser.execute(requestData);
 
       if (user) {
-        response
-          .status(201)
-          .json({
-            data: UserResponse.index(user),
-            message: "created with success",
-          });
+        await audit({
+          action: Actions.Create,
+          entity: "User",
+          userId: request?.user?.id ?? user.id,
+          registerId: user.id,
+        });
+        response.status(201).json({
+          data: UserResponse.index(user),
+          message: "created with success",
+        });
       } else {
         response.json({ data: "ocorreu um erro ao criar o usuario" });
       }

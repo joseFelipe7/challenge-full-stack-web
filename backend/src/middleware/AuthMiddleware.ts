@@ -1,11 +1,8 @@
+import { CustomRequest } from "@/core/Request";
 import { User, UserProps } from "@/domain/entities/User";
-import { NextFunction, Request, Response } from "express";
+import { NextFunction, Response } from "express";
 
 import jwt, { Secret } from "jsonwebtoken";
-
-export interface CustomRequest extends Request {
-  user: User;
-}
 
 interface IPayloadUser {
   user: {

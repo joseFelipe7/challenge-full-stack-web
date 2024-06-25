@@ -2,6 +2,7 @@ import { AuthMiddleware } from "@/middleware/AuthMiddleware";
 import auth from "@/routes/auth";
 import user from "@/routes/user";
 import { Request, Response, Router } from "express";
+
 const router = Router();
 
 router.get("/", (req: Request, res: Response) => {

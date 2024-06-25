@@ -21,3 +21,11 @@ model User {
   updated_at DateTime @default(now())
   deleted_at DateTime? 
 }
+model Log {
+  id          String   @id @unique @default(uuid())
+  action      String
+  entity      String
+  user_id     String   
+  register_id String
+  created_at  DateTime @default(now())
+}

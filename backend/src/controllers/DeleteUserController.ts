@@ -1,11 +1,14 @@
+import { CustomRequest } from "@/core/Request";
+import { Actions } from "@/domain/entities/Log";
 import { UserResponse } from "@/response/UserResponse";
 import { UserNotFoundError } from "@/useCases/errors/UserNotFoundError";
 import { deleteUserFactory } from "@/useCases/factories/deleteUserFactory";
+import { audit } from "@/utils";
 import deleteUserRequest from "@/validators/deleteUserRequest";
-import { Request, Response } from "express";
+import { Response } from "express";
 
 export class DeleteUserController {
-  execute = async (request: Request, response: Response) => {
+  execute = async (request: CustomRequest, response: Response) => {
     const validate = deleteUserRequest.validate({
       id: request.params.id,
       ...request.body,
@@ -25,12 +28,17 @@ export class DeleteUserController {
       const user = await deleteUser.execute(id);
 
       if (user) {
-        return response
-          .status(204)
-          .json({
-            data: UserResponse.index(user),
-            message: "deleted with success",
-          });
+        await audit({
+          action: Actions.Delete,
+          entity: "User",
+          userId: request?.user?.id ?? "",
+          registerId: user.id,
+        });
+
+        return response.status(204).json({
+          data: UserResponse.index(user),
+          message: "deleted with success",
+        });
       }
       return response.json({ data: "ocorreu um erro ao excluir o usuario" });
     } catch (error: any) {
