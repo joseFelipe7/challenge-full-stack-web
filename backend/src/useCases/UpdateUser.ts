@@ -1,6 +1,6 @@
 import { IUserRepository } from "@/repositories/IUserRepository";
 import { hashSync } from "bcrypt";
-import { UserAlreadyExistsError } from "./errors/UserAlreadyExistsError";
+import { UserNotFoundError } from "./errors/UserNotFoundError";
 
 type UpdateUserRequest = {
   name?: string;
@@ -12,7 +12,7 @@ export class UpdateUser {
   async execute(id: string, data: UpdateUserRequest) {
     const userFind = await this.userRepository.findById(id);
 
-    if (!userFind) throw new UserAlreadyExistsError();
+    if (!userFind) throw new UserNotFoundError();
 
     userFind.props.name = data.name ?? userFind.props.name;
     userFind.props.password = data.password

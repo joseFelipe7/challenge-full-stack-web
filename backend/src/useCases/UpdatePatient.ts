@@ -20,6 +20,7 @@ export class UpdatePatient {
     patientFind.props.email = data.email ?? patientFind.props.email;
     patientFind.props.phone = data.phone ?? patientFind.props.phone;
     patientFind.props.gender = data.gender ?? patientFind.props.gender;
+    patientFind.props.birthdate = data.birthdate ?? patientFind.props.birthdate;
 
     const patientUpdate = await this.patientRepository.update(patientFind);
 

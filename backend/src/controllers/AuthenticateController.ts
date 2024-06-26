@@ -7,10 +7,10 @@ import { InvalidCredentialsError } from "@/useCases/errors/InvalidCredentialsErr
 import { UserNotFoundError } from "@/useCases/errors/UserNotFoundError";
 import jwt, { Secret } from "jsonwebtoken";
 
-const SECRET_KEY: Secret = process.env.SECRET_KEY ?? "";
-
 export class AuthenticateController {
   execute = async (request: Request, response: Response) => {
+    const SECRET_KEY: Secret = process.env.SECRET_KEY ?? "";
+
     const validate = authenticateRequest.validate(request.body);
 
     if (validate.error)
