@@ -18,8 +18,8 @@ import { useRouter } from "next/navigation";
 import React, { useMemo, useState } from "react";
 
 interface IUser {
+  id: string;
   attributes: {
-    id: number;
     name: string;
     email: string;
   };
@@ -70,6 +70,17 @@ export function UserList() {
       </Heading>
 
       <Flex direction="column">
+        <Box className="mb-5">
+          <Flex gap="4" align="center" className="font-bold">
+            <Box width="200px">
+              <Text size="2">Nome</Text>
+            </Box>
+            <Box>
+              <Text size="2">E-MAIL</Text>
+            </Box>
+          </Flex>
+        </Box>
+
         {users.map((user, i) => (
           <Box key={i}>
             <Flex gap="4" align="center">
@@ -98,8 +109,9 @@ export function UserList() {
                   <DropdownMenu.Content
                     container={portalContainer}
                     variant="soft"
+                    onClick={() => router.push(`/user/${user?.id}`)}
                   >
-                    <DropdownMenu.Item>View profile</DropdownMenu.Item>
+                    <DropdownMenu.Item>Editar</DropdownMenu.Item>
                   </DropdownMenu.Content>
                 </DropdownMenu.Root>
               </Flex>

@@ -1,5 +1,6 @@
 "use client";
 
+import { NavbarCore } from "@/components/core/NavbarCore/NavbarCore";
 import { Suspense } from "react";
 
 export default function RootLayout({
@@ -25,6 +26,7 @@ export default function RootLayout({
           </div>
         </div>
       </nav>
+      <NavbarCore />
       {children}
     </Suspense>
   );

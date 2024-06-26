@@ -1,18 +1,29 @@
-"use client";
-
 import BtnSubmitForm from "@/components/core/BtnSubmitForm/BtnSubmitForm";
+import ButtonCore from "@/components/core/ButtonCore/ButtonCore";
+import { DatePicker } from "@/components/core/DatePicker/DatePicker";
 import Form from "@/components/core/Form/Form";
 import { Input } from "@/components/core/Input/Input";
+import { Select } from "@/components/core/Select/Select";
 import axiosInstance from "@/src/lib/axiosInstance";
-
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Flex } from "@radix-ui/themes";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import ButtonCore from "@/components/core/ButtonCore/ButtonCore";
-import { Select } from "@/components/core/Select/Select";
-import { useRouter } from "next/navigation";
+interface PatientFormData {
+  name: string;
+  email: string;
+  birthdate: Date | null;
+  phone: string;
+  document: string;
+  gender: "Female" | "Male";
+}
+
+interface PatientFormProps {
+  initialValues?: PatientFormData;
+  id?: string;
+}
 
 const formSchema = z.object({
   email: z
@@ -29,10 +40,14 @@ const formSchema = z.object({
     .string()
     .min(10, { message: "Telefone deve ter pelo menos 10 caracteres" })
     .max(11, { message: "Telefone não deve ter mais de 11 caracteres" }),
-  birthdate: z.string(),
-  // birthdate: z.date().max(new Date(), {
-  //   message: "A data de nascimento não pode ser maior que a data de hoje.",
-  // }),
+  birthdate: z
+    .union([z.date(), z.null()])
+    .refine((val) => val !== null, {
+      message: "A data de nascimento é obrigatória.",
+    })
+    .refine((val) => val === null || val <= new Date(), {
+      message: "A data de nascimento não pode ser maior que a data de hoje.",
+    }),
   document: z.string().length(11, { message: "CPF deve conter 11 dígitos." }),
   gender: z.enum(["Female", "Male"], {
     required_error: "O gênero é obrigatório.",
@@ -42,25 +57,37 @@ const formSchema = z.object({
 
 type FormValues = z.infer<typeof formSchema>;
 
-export function PatientForm() {
+export function PatientForm({ initialValues, id }: PatientFormProps) {
   const router = useRouter();
 
-  const { handleSubmit, control } = useForm<FormValues>({
+  const { handleSubmit, control, reset } = useForm<FormValues>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
+    defaultValues: initialValues || {
       name: "",
       email: "",
-      birthdate: "",
+      birthdate: null,
       phone: "",
       document: "",
+      gender: "Female",
     },
     mode: "onChange",
   });
 
   const onSubmit = async (data: FormValues) => {
-    const { email, name, birthdate, phone, document, gender } = data;
+    const { name, email, birthdate, phone, document, gender } = data;
 
     try {
+      if (id) {
+        const response = await axiosInstance.put(`/patient/${id}`, {
+          email,
+          name,
+          birthdate,
+          phone,
+          gender,
+        });
+        return router.push("/patient");
+      }
+
       const response = await axiosInstance.post("/patient", {
         email,
         name,
@@ -70,11 +97,12 @@ export function PatientForm() {
         gender,
       });
       router.push("/patient");
-      console.log("create patient successful", response.data);
     } catch (error: any) {
-      console.error("Error during create patient", error);
+      console.error("Error during patient operation", error);
       alert(
-        `Ocorreu um erro ao Criar o paciente. ${error.response.data.message}`
+        `Ocorreu um erro ao ${id ? "atualizar" : "criar"} o paciente. ${
+          error?.response?.data?.message
+        }`
       );
     }
   };
@@ -105,17 +133,17 @@ export function PatientForm() {
         name="document"
         placeholder="Insira seu documento"
       />
-      <Input
+      <DatePicker
         control={control}
         label="Data de nascimento"
         name="birthdate"
-        placeholder="Insira sea data de nascimento"
+        placeholder="Insira sua data de nascimento"
       />
       <Select
         name="gender"
         control={control}
         label="Gênero"
-        placeholder="Insira seu generot"
+        placeholder="Selecione o gênero"
         options={[
           { value: "Female", label: "Feminino" },
           { value: "Male", label: "Masculino" },
@@ -123,7 +151,7 @@ export function PatientForm() {
       />
 
       <Flex mt="6" justify="center" gap="3" direction="column">
-        <BtnSubmitForm label="Salvar" />
+        <BtnSubmitForm label={initialValues ? "Atualizar" : "Salvar"} />
 
         <ButtonCore variant="outline" onClick={() => router.back()}>
           Voltar

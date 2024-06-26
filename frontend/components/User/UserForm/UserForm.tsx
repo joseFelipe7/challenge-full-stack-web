@@ -20,7 +20,11 @@ const formSchema = z.object({
     .email({ message: "Email inválido" }),
   password: z
     .string()
-    .min(6, { message: "Senha deve ter pelo menos 6 caracteres" }),
+    .min(6, "A senha deve ter pelo menos 6 caracteres.")
+    .regex(
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,}$/,
+      "A senha deve conter pelo menos uma letra maiúscula, uma letra minúscula e um número."
+    ),
   name: z
     .string()
     .min(6, { message: "Nome deve ter pelo menos 6 caracteres" })
