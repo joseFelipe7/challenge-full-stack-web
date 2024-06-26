@@ -2,9 +2,9 @@ import { PrismaUserRepository } from "@/repositories/implementations/prisma/Pris
 import { DeleteUser } from "@/useCases/DeleteUser";
 
 export function deleteUserFactory(): DeleteUser {
-  const invoiceRepository = new PrismaUserRepository();
+  const userRepository = new PrismaUserRepository();
 
-  const useCase = new DeleteUser(invoiceRepository);
+  const useCase = new DeleteUser(userRepository);
 
   return useCase;
 }
