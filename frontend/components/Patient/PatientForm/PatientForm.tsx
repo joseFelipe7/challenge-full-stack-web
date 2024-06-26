@@ -18,9 +18,6 @@ const formSchema = z.object({
     .string()
     .min(1, { message: "Email é obrigatório" })
     .email({ message: "Email inválido" }),
-  password: z
-    .string()
-    .min(6, { message: "Senha deve ter pelo menos 6 caracteres" }),
   name: z
     .string()
     .min(3, { message: "Nome deve ter pelo menos 3 caracteres" })
@@ -31,7 +28,7 @@ const formSchema = z.object({
 
 type FormValues = z.infer<typeof formSchema>;
 
-export function UserForm() {
+export function PatientForm() {
   const router = useRouter();
 
   const { handleSubmit, control } = useForm<FormValues>({
@@ -39,25 +36,23 @@ export function UserForm() {
     defaultValues: {
       name: "",
       email: "",
-      password: "",
     },
     mode: "onChange",
   });
 
   const onSubmit = async (data: FormValues) => {
-    const { email, password, name } = data;
+    const { email, name } = data;
 
     try {
-      const response = await axiosInstance.post("/user", {
+      const response = await axiosInstance.post("/patient", {
         email,
-        password,
         name,
       });
 
-      console.log("create user successful", response.data);
+      console.log("create patient successful", response.data);
     } catch (error: any) {
-      console.error("Error during create user", error);
-      alert(`Ocorreu um erro ao Criar o usuário. ${error?.message}`);
+      console.error("Error during create patient", error);
+      alert(`Ocorreu um erro ao Criar o paciente. ${error?.message}`);
     }
   };
 
@@ -74,12 +69,6 @@ export function UserForm() {
         label="E-mail"
         name="email"
         placeholder="Insira seu e-mail"
-      />
-      <Input
-        control={control}
-        label="Senha"
-        name="password"
-        placeholder="Insira a senha"
       />
 
       <Flex mt="6" justify="center" gap="3" direction="column">

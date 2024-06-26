@@ -12,7 +12,6 @@ import { z } from "zod";
 
 import { useRouter } from "next/navigation";
 
-// Defina o esquema de validação com zod
 const formSchema = z.object({
   email: z
     .string()
