@@ -17,28 +17,28 @@ import { DotsHorizontalIcon } from "@radix-ui/react-icons";
 import { useRouter } from "next/navigation";
 import React, { useMemo, useState } from "react";
 
-interface IPatient {
+interface IUser {
   id: number;
   name: string;
   email: string;
 }
 
-export function PatientList() {
+export function UserList() {
   const router = useRouter();
 
   const [portalContainer, setPortalContainer] =
     React.useState<HTMLDivElement>();
 
-  const [patients, setPaients] = useState<IPatient[]>([]);
+  const [users, setUsers] = useState<IUser[]>([]);
 
   useMemo(() => {
     const fetchUsers = async () => {
       try {
-        const response = await axiosInstance.get("/patients");
-        setPaients(response.data);
+        const response = await axiosInstance.get("/users");
+        setUsers(response.data);
       } catch (error) {
         console.error("Error fetching users", error);
-        alert("Ocorreu um erro ao listar os pacientes.");
+        alert("Ocorreu um erro ao listar os usuários.");
       }
     };
 
@@ -48,11 +48,11 @@ export function PatientList() {
   return (
     <Card size="4" className="w-full">
       <Heading as="h3" size="6" trim="start" mb="2">
-        Pacientes
+        Usuários
       </Heading>
 
       <Flex direction="column">
-        {/* patients.map... */}
+        {/* users.map... */}
         {[4, 2, 12, 20, 16].map((number, i) => (
           <Box key={number}>
             <Flex gap="4" align="center">

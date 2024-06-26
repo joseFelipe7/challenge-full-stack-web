@@ -1,6 +1,6 @@
 "use client";
 
-import { PatientList } from "@/components/Patient/PatientList/PatientList";
+import { UserList } from "@/components/User/UserList/UserList";
 import { NavbarCore } from "@/components/core/NavbarCore/NavbarCore";
 
 const Index = () => {
@@ -9,7 +9,7 @@ const Index = () => {
       <NavbarCore />
 
       <main className="ml-60 pt-16 max-h-screen overflow-auto">
-        <PatientList />
+        <UserList />
       </main>
     </>
   );
