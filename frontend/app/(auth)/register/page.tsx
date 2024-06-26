@@ -10,11 +10,13 @@ type FormValues = {
 
 const Index = () => {
   return (
-    <Suspense>
-      <h1>Login</h1>
+    <main className="flex min-h-screen flex-col items-center p-24">
+      <Suspense>
+        <h1>Register</h1>
 
-      <UserForm />
-    </Suspense>
+        <UserForm />
+      </Suspense>
+    </main>
   );
 };
 

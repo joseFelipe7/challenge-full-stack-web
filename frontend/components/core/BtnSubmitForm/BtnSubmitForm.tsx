@@ -10,8 +10,8 @@ const BtnSubmitForm = ({
     className?: string;
     label?: string;
   }) => (
-  <FormRadix.Submit asChild>
-    <ButtonCore size={"3"} className={`${className}`}>
+  <FormRadix.Submit asChild className={`w-full ${className}`}>
+    <ButtonCore size={"3"} className={`w-full`}>
       {label}
     </ButtonCore>
   </FormRadix.Submit>
