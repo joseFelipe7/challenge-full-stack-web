@@ -10,7 +10,7 @@ export type PatientProps = {
   birthdate: Date;
   createdAt?: Date;
   updatedAt?: Date;
-  deletedAt?: Date;
+  deletedAt?: Date | null;
 };
 
 export class Patient extends Entity<PatientProps> {
@@ -27,6 +27,7 @@ export class Patient extends Entity<PatientProps> {
       ...props,
       createdAt: props.created_at,
       updatedAt: props.updated_at,
+      deletedAt: props.deleted_at,
     };
     const patient = new Patient(propsLog, props.id);
     return patient;

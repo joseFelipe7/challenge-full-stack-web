@@ -7,7 +7,7 @@ export type UserProps = {
   password: string;
   createdAt?: Date;
   updatedAt?: Date;
-  deletedAt?: Date;
+  deletedAt?: Date | null;
 };
 
 export class User extends Entity<UserProps> {
@@ -24,6 +24,7 @@ export class User extends Entity<UserProps> {
       ...props,
       createdAt: props.created_at,
       updatedAt: props.updated_at,
+      deletedAt: props.deleted_at,
     };
     const user = new User(propsLog, props.id);
     return user;

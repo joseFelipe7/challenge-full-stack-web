@@ -44,11 +44,14 @@ export class PrismaPatientRepository implements IPatientRepository {
     page: number
   ): Promise<list<patientRepository>> {
     const results = await prismaClient.$transaction([
-      prismaClient.patient.count({ where: where }),
+      prismaClient.patient.count({ where: { ...where, deleted_at: null } }),
       prismaClient.patient.findMany({
         skip: (page - 1) * perPage,
         take: perPage,
-        where: where,
+        where: {
+          ...where,
+          deleted_at: null,
+        },
         orderBy: {
           created_at: "desc",
         },

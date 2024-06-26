@@ -29,6 +29,7 @@ export class PrismaUserRepository implements IUserRepository {
         deleted_at: user.props.deletedAt,
       },
     });
+
     return user ? User.repositoryFromEntity(userUpdate) : null;
   }
   async list(
@@ -37,11 +38,14 @@ export class PrismaUserRepository implements IUserRepository {
     page: number
   ): Promise<list<userRepository>> {
     const results = await prismaClient.$transaction([
-      prismaClient.user.count({ where: where }),
+      prismaClient.user.count({ where: { ...where, deleted_at: null } }),
       prismaClient.user.findMany({
         skip: (page - 1) * perPage,
         take: perPage,
-        where: where,
+        where: {
+          ...where,
+          deleted_at: null,
+        },
         orderBy: {
           created_at: "desc",
         },

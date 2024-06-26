@@ -4,6 +4,7 @@ import { Request, Response } from "express";
 
 import { UserResponse } from "@/response/UserResponse";
 import { InvalidCredentialsError } from "@/useCases/errors/InvalidCredentialsError";
+import { UserNotFoundError } from "@/useCases/errors/UserNotFoundError";
 import jwt, { Secret } from "jsonwebtoken";
 
 const SECRET_KEY: Secret = process.env.SECRET_KEY ?? "";
@@ -34,6 +35,8 @@ export class AuthenticateController {
         authorization: { token },
       });
     } catch (error: any) {
+      if (error instanceof UserNotFoundError)
+        return response.status(422).send({ message: error.message });
       if (error instanceof InvalidCredentialsError)
         return response.status(403).send({ message: error.message });
 
