@@ -49,7 +49,6 @@ export function PatientForm() {
       birthdate: "",
       phone: "",
       document: "",
-      gender: "",
     },
     mode: "onChange",
   });
