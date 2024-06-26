@@ -1,15 +1,15 @@
 import { CustomRequest } from "@/core/Request";
 import { Actions } from "@/domain/entities/Log";
-import { UserResponse } from "@/response/UserResponse";
-import { UserNotFoundError } from "@/useCases/errors/UserNotFoundError";
-import { deleteUserFactory } from "@/useCases/factories/deleteUserFactory";
+import { PatientResponse } from "@/response/PatientResponse";
+import { PatientNotFoundError } from "@/useCases/errors/PatientNotFoundError";
+import { deletePatientFactory } from "@/useCases/factories/deletePatientFactory";
 import { audit } from "@/utils";
-import deleteUserRequest from "@/validators/deleteUserRequest";
+import deletePatientRequest from "@/validators/deletePatientRequest";
 import { Response } from "express";
 
-export class DeleteUserController {
+export class DeletePatientController {
   execute = async (request: CustomRequest, response: Response) => {
-    const validate = deleteUserRequest.validate({
+    const validate = deletePatientRequest.validate({
       id: request.params.id,
       ...request.body,
     });
@@ -22,26 +22,26 @@ export class DeleteUserController {
 
     try {
       const id = request.params.id;
-      const deleteUser = deleteUserFactory();
+      const deletePatient = deletePatientFactory();
 
-      const user = await deleteUser.execute(id);
+      const patient = await deletePatient.execute(id);
 
-      if (user) {
+      if (patient) {
         await audit({
           action: Actions.Delete,
-          entity: "User",
+          entity: "Patient",
           userId: request?.user?.id ?? "",
-          registerId: user.id,
+          registerId: patient.id,
         });
 
         return response.status(204).json({
-          data: UserResponse.index(user),
+          data: PatientResponse.index(patient),
           message: "deleted with success",
         });
       }
       return response.json({ data: "ocorreu um erro ao excluir o usuario" });
     } catch (error: any) {
-      if (error instanceof UserNotFoundError)
+      if (error instanceof PatientNotFoundError)
         return response.status(422).send({ message: error.message });
 
       return response.status(400).json({ message: error.message });

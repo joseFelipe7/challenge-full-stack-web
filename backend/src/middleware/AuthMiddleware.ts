@@ -18,12 +18,13 @@ export class AuthMiddleware {
     const SECRET_KEY: Secret = process.env.SECRET_KEY ?? "";
     if (!req.headers.authorization)
       return res.status(403).json({ error: "No credentials sent!" });
+
     const [, authToken] = req.headers.authorization?.split("Bearer ");
+
     jwt.verify(authToken, SECRET_KEY, (err, user) => {
-      if (err) return res.status(403).json({ message: "pass incorrect" });
+      if (err) return res.status(403).json({ message: "invalid token" });
 
       const { user: userData } = user as IPayloadUser;
-
       req.user = User.create(userData.props, userData._id);
 
       return next();

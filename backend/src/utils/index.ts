@@ -1,7 +1,8 @@
 import { PrismaLogRepository } from "@/repositories/implementations/prisma/PrismaLogRepository";
 import { Audit, logData } from "@/utils/Audit";
+import validateCPF from "@/utils/validateCPF";
 
-export async function audit(data: logData) {
+async function audit(data: logData) {
   const logRepository = new PrismaLogRepository();
 
   const useCase = new Audit(logRepository);
@@ -9,3 +10,4 @@ export async function audit(data: logData) {
   const log = await useCase.execute(data);
   return log;
 }
+export { audit, validateCPF };
