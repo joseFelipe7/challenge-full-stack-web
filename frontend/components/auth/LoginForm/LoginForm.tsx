@@ -48,7 +48,9 @@ export function LoginForm() {
         password,
       });
 
-      // sessionStorage.setItem("token", response?.data?.authorization?.token);
+      const [, data] = response?.data?.authorization?.token.split(".");
+      sessionStorage.setItem("data_user", atob(data));
+
       setCookie("token", response?.data?.authorization?.token);
       console.log("Login successful", response.data);
       router.push("/user");
