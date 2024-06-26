@@ -9,11 +9,13 @@ import {
 interface InputProps<T extends FieldValues> extends UseControllerProps<T> {
   label?: string;
   placeholder?: string;
+  readOnly?: boolean;
 }
 
 export function Input<T extends FieldValues>({
   label,
   placeholder,
+  readOnly = false,
   ...props
 }: InputProps<T>) {
   const { field, fieldState } = useController(props);
@@ -32,6 +34,7 @@ export function Input<T extends FieldValues>({
         <TextField.Root
           size="3"
           placeholder={placeholder || label}
+          readOnly={readOnly}
           {...field}
         />
       </FormRadix.Control>

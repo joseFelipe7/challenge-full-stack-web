@@ -13,6 +13,17 @@ import { z } from "zod";
 import ButtonCore from "@/components/core/ButtonCore/ButtonCore";
 import { useRouter } from "next/navigation";
 
+interface UserFormData {
+  name: string;
+  password: string;
+  email?: string;
+}
+
+interface UserFormProps {
+  initialValues?: UserFormData;
+  id?: string;
+}
+
 const formSchema = z.object({
   email: z
     .string()
@@ -35,12 +46,12 @@ const formSchema = z.object({
 
 type FormValues = z.infer<typeof formSchema>;
 
-export function UserForm() {
+export function UserForm({ initialValues, id }: UserFormProps) {
   const router = useRouter();
 
-  const { handleSubmit, control } = useForm<FormValues>({
+  const { handleSubmit, control, reset } = useForm<FormValues>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
+    defaultValues: initialValues || {
       name: "",
       email: "",
       password: "",
@@ -49,9 +60,17 @@ export function UserForm() {
   });
 
   const onSubmit = async (data: FormValues) => {
-    const { email, password, name } = data;
+    const { name, email, password } = data;
 
     try {
+      if (id) {
+        const response = await axiosInstance.put(`/user/${id}`, {
+          password,
+          name,
+        });
+        return router.push("/user");
+      }
+
       const response = await axiosInstance.post("/user", {
         email,
         password,
@@ -61,11 +80,11 @@ export function UserForm() {
       console.log("create user successful", response.data);
       router.push("/user");
     } catch (error: any) {
-      console.log(error);
-      console.log(error.response.data.message);
-      console.error("Error during create user", error);
+      console.error("Error during user operation", error);
       alert(
-        `Ocorreu um erro ao Criar o usuário. ${error.response.data.message}`
+        `Ocorreu um erro ao ${id ? "atualizar" : "criar"} o usuário. ${
+          error?.response?.data?.message || "Erro desconhecido."
+        }`
       );
     }
   };
@@ -78,12 +97,15 @@ export function UserForm() {
         name="name"
         placeholder="Insira seu nome"
       />
+
       <Input
         control={control}
         label="E-mail"
         name="email"
         placeholder="Insira seu e-mail"
+        readOnly={id ? true : false}
       />
+
       <Input
         control={control}
         label="Senha"
@@ -92,7 +114,7 @@ export function UserForm() {
       />
 
       <Flex mt="6" justify="center" gap="3" direction="column">
-        <BtnSubmitForm label="Salvar" />
+        <BtnSubmitForm label={initialValues ? "Atualizar" : "Salvar"} />
 
         <ButtonCore variant="outline" onClick={() => router.back()}>
           Voltar
