@@ -5,7 +5,7 @@ const Form = ({
   onSubmit,
   className,
 }: FormRadix.FormProps & { className?: string }) => (
-  <FormRadix.Root onSubmit={onSubmit} className={`w-[260px] ${className}`}>
+  <FormRadix.Root onSubmit={onSubmit} className={`grid w-[260px] ${className}`}>
     {children}
   </FormRadix.Root>
 );
