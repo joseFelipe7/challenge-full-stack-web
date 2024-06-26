@@ -1,10 +1,17 @@
-import joi from "joi"
+import joi from "joi";
 
 export default joi.object().keys({
-                  name:    joi.string().min(6).max(100).required(),
-                  password:joi.string()
-                            .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,}$/)
-                            .messages({'string.pattern.base': 'A senha deve conter pelo menos uma letra maiúscula, uma letra minúscula e um número, com pelo menos 6 caracteres.'})
-                            .required(),
-                  email:   joi.string().min(6).max(150).required().email(),                   
-                })
+  name: joi.string().min(6).max(100).required(),
+  password: joi
+    .string()
+    .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,}$/)
+    .messages({
+      "string.pattern.base":
+        "A senha deve conter pelo menos uma letra maiúscula, uma letra minúscula e um número, com pelo menos 6 caracteres.",
+    })
+    .required(),
+  email: joi.string().email().required().messages({
+    "string.email": "O email deve ser válido.",
+    "any.required": "O email é obrigatório.",
+  }),
+});

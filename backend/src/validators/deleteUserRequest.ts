@@ -1,5 +1,5 @@
-import joi from "joi"
+import joi from "joi";
 
 export default joi.object().keys({
-                  id:joi.string().required(),
-              });
+  id: joi.string().required(),
+});

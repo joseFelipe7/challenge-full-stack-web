@@ -21,7 +21,6 @@ export class DeleteUserController {
       });
 
     try {
-      const requestData = validate.value;
       const id = request.params.id;
       const deleteUser = deleteUserFactory();
 

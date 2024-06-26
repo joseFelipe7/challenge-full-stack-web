@@ -23,9 +23,22 @@ model User {
 }
 model Log {
   id          String   @id @unique @default(uuid())
-  action      String
-  entity      String
+  action      String   
+  entity      String   
   user_id     String   
   register_id String
   created_at  DateTime @default(now())
+}
+
+model Patient {
+  id         String   @id @unique @default(uuid())
+  name       String
+  document   String   @unique
+  email      String?   
+  phone      String   
+  gender     String   
+  birthdate  DateTime @db.Date  
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now())
+  deleted_at DateTime?
 }
