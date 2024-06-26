@@ -20,10 +20,20 @@ const formSchema = z.object({
     .email({ message: "Email inválido" }),
   name: z
     .string()
-    .min(3, { message: "Nome deve ter pelo menos 3 caracteres" })
-    .regex(/^[a-zA-Z]+$/, {
+    .min(6, { message: "Nome deve ter pelo menos 6 caracteres" })
+    .regex(/^[a-zA-ZáÁéÉíÍóÓúÚâÂêÊîÎôÔûÛãÃõÕçÇ ]+$/, {
       message: "Nome não deve conter números ou símbolos",
     }),
+  phone: z.string().min(10).max(11),
+  birthdate: z.string(),
+  // birthdate: z.date().max(new Date(), {
+  //   message: "A data de nascimento não pode ser maior que a data de hoje.",
+  // }),
+  document: z.string().length(11, { message: "CPF deve conter 11 dígitos." }),
+  gender: z.enum(["Female", "Male"], {
+    required_error: "O gênero é obrigatório.",
+    invalid_type_error: 'O gênero deve ser "Female" ou "Male".',
+  }),
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -36,23 +46,33 @@ export function PatientForm() {
     defaultValues: {
       name: "",
       email: "",
+      birthdate: "",
+      phone: "",
+      document: "",
+      gender: "",
     },
     mode: "onChange",
   });
 
   const onSubmit = async (data: FormValues) => {
-    const { email, name } = data;
+    const { email, name, birthdate, phone, document, gender } = data;
 
     try {
       const response = await axiosInstance.post("/patient", {
         email,
         name,
+        birthdate,
+        phone,
+        document,
+        gender,
       });
-
+      router.push("/patient");
       console.log("create patient successful", response.data);
     } catch (error: any) {
       console.error("Error during create patient", error);
-      alert(`Ocorreu um erro ao Criar o paciente. ${error?.message}`);
+      alert(
+        `Ocorreu um erro ao Criar o paciente. ${error.response.data.message}`
+      );
     }
   };
 
@@ -69,6 +89,30 @@ export function PatientForm() {
         label="E-mail"
         name="email"
         placeholder="Insira seu e-mail"
+      />
+      <Input
+        control={control}
+        label="Telefone"
+        name="phone"
+        placeholder="Insira seu telefone"
+      />
+      <Input
+        control={control}
+        label="Documento"
+        name="document"
+        placeholder="Insira seu documento"
+      />
+      <Input
+        control={control}
+        label="Data de nascimento"
+        name="birthdate"
+        placeholder="Insira sea data de nascimento"
+      />
+      <Input
+        control={control}
+        label="Genero"
+        name="gender"
+        placeholder="Insira seu genero"
       />
 
       <Flex mt="6" justify="center" gap="3" direction="column">

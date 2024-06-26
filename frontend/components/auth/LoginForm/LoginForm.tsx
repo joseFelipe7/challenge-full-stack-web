@@ -42,17 +42,17 @@ export function LoginForm() {
     const { email, password } = data;
 
     try {
-      const response = await axiosInstance.post("/login", {
+      const response = await axiosInstance.post("/auth", {
         email,
         password,
       });
 
       sessionStorage.setItem("token", response?.data?.authorization?.token);
-
       console.log("Login successful", response.data);
+      router.push("/user");
     } catch (error: any) {
       console.error("Error during login", error);
-      alert(`E-mail ou senha incorretos. ${error?.message}`);
+      alert(`E-mail ou senha incorretos. ${error.response.data.message}`);
     }
   };
 

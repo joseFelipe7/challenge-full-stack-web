@@ -18,10 +18,26 @@ import { useRouter } from "next/navigation";
 import React, { useMemo, useState } from "react";
 
 interface IUser {
-  id: number;
-  name: string;
-  email: string;
+  attributes: {
+    id: number;
+    name: string;
+    email: string;
+  };
 }
+// interface IUser {
+//   data: Array<{
+//     id: number;
+//     name: string;
+//     email: string;
+//   }>;
+//   meta: {
+//     total: number;
+//     page: number;
+//     per_page: number;
+//     first_page: number;
+//     last_page: number;
+//   };
+// }
 
 export function UserList() {
   const router = useRouter();
@@ -34,8 +50,10 @@ export function UserList() {
   useMemo(() => {
     const fetchUsers = async () => {
       try {
-        const response = await axiosInstance.get("/users");
-        setUsers(response.data);
+        const response = await axiosInstance.get("/user");
+        console.log(response.data);
+        console.log(response.data.data);
+        setUsers(response.data.data);
       } catch (error) {
         console.error("Error fetching users", error);
         alert("Ocorreu um erro ao listar os usuários.");
@@ -52,9 +70,8 @@ export function UserList() {
       </Heading>
 
       <Flex direction="column">
-        {/* users.map... */}
-        {[4, 2, 12, 20, 16].map((number, i) => (
-          <Box key={number}>
+        {users.map((user, i) => (
+          <Box key={i}>
             <Flex gap="4" align="center">
               <Flex gap="3" align="center" width="200px">
                 <Link
@@ -63,12 +80,12 @@ export function UserList() {
                   wrap="nowrap"
                   onClick={(e) => e.preventDefault()}
                 >
-                  feh
+                  {user.attributes.name}
                 </Link>
               </Flex>
 
               <Text size="2" color="gray">
-                email
+                {user.attributes.email}
               </Text>
 
               <Flex flexGrow="1" justify="end">

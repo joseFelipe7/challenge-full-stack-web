@@ -18,9 +18,11 @@ import { useRouter } from "next/navigation";
 import React, { useMemo, useState } from "react";
 
 interface IPatient {
-  id: number;
-  name: string;
-  email: string;
+  attributes: {
+    id: number;
+    name: string;
+    document: string;
+  };
 }
 
 export function PatientList() {
@@ -34,8 +36,8 @@ export function PatientList() {
   useMemo(() => {
     const fetchUsers = async () => {
       try {
-        const response = await axiosInstance.get("/patients");
-        setPaients(response.data);
+        const response = await axiosInstance.get("/patient");
+        setPaients(response.data.data);
       } catch (error) {
         console.error("Error fetching users", error);
         alert("Ocorreu um erro ao listar os pacientes.");
@@ -52,9 +54,8 @@ export function PatientList() {
       </Heading>
 
       <Flex direction="column">
-        {/* patients.map... */}
-        {[4, 2, 12, 20, 16].map((number, i) => (
-          <Box key={number}>
+        {patients.map((patient, i) => (
+          <Box key={i}>
             <Flex gap="4" align="center">
               <Flex gap="3" align="center" width="200px">
                 <Link
@@ -63,12 +64,12 @@ export function PatientList() {
                   wrap="nowrap"
                   onClick={(e) => e.preventDefault()}
                 >
-                  feh
+                  {patient.attributes.name}
                 </Link>
               </Flex>
 
               <Text size="2" color="gray">
-                email
+                {patient.attributes.document}
               </Text>
 
               <Flex flexGrow="1" justify="end">

@@ -22,8 +22,8 @@ const formSchema = z.object({
     .min(6, { message: "Senha deve ter pelo menos 6 caracteres" }),
   name: z
     .string()
-    .min(3, { message: "Nome deve ter pelo menos 3 caracteres" })
-    .regex(/^[a-zA-Z]+$/, {
+    .min(6, { message: "Nome deve ter pelo menos 6 caracteres" })
+    .regex(/^[a-zA-ZáÁéÉíÍóÓúÚâÂêÊîÎôÔûÛãÃõÕçÇ ]+$/, {
       message: "Nome não deve conter números ou símbolos",
     }),
 });
@@ -47,16 +47,16 @@ export function RegisterForm() {
     const { email, password, name } = data;
 
     try {
-      const response = await axiosInstance.post("/user", {
+      const response = await axiosInstance.post("/register", {
         email,
         password,
         name,
       });
-
       console.log("Register successful", response.data);
+      router.push("/login");
     } catch (error: any) {
       console.error("Error during register", error);
-      alert(`Ocorreu um erro ao Criar a conta. ${error?.message}`);
+      alert(`Ocorreu um erro ao Criar a conta. ${error.response.data.message}`);
     }
   };
 

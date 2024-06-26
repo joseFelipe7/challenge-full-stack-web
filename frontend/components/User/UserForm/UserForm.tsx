@@ -23,8 +23,8 @@ const formSchema = z.object({
     .min(6, { message: "Senha deve ter pelo menos 6 caracteres" }),
   name: z
     .string()
-    .min(3, { message: "Nome deve ter pelo menos 3 caracteres" })
-    .regex(/^[a-zA-Z]+$/, {
+    .min(6, { message: "Nome deve ter pelo menos 6 caracteres" })
+    .regex(/^[a-zA-ZáÁéÉíÍóÓúÚâÂêÊîÎôÔûÛãÃõÕçÇ ]+$/, {
       message: "Nome não deve conter números ou símbolos",
     }),
 });
@@ -55,9 +55,14 @@ export function UserForm() {
       });
 
       console.log("create user successful", response.data);
+      router.push("/user");
     } catch (error: any) {
+      console.log(error);
+      console.log(error.response.data.message);
       console.error("Error during create user", error);
-      alert(`Ocorreu um erro ao Criar o usuário. ${error?.message}`);
+      alert(
+        `Ocorreu um erro ao Criar o usuário. ${error.response.data.message}`
+      );
     }
   };
 
