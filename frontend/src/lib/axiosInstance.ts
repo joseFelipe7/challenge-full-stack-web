@@ -1,5 +1,5 @@
 import axios from "axios";
-
+import { getCookie } from "cookies-next";
 const axiosInstance = axios.create({
   baseURL: "http://localhost:3030",
   timeout: 1000,
@@ -7,7 +7,7 @@ const axiosInstance = axios.create({
 
 axiosInstance.interceptors.request.use(
   (config) => {
-    const token = sessionStorage.getItem("token");
+    const token = getCookie("token");
     console.log(token);
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;

@@ -11,6 +11,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import ButtonCore from "@/components/core/ButtonCore/ButtonCore";
+import { setCookie } from "cookies-next";
 import { useRouter } from "next/navigation";
 
 // Defina o esquema de validação com zod
@@ -47,7 +48,8 @@ export function LoginForm() {
         password,
       });
 
-      sessionStorage.setItem("token", response?.data?.authorization?.token);
+      // sessionStorage.setItem("token", response?.data?.authorization?.token);
+      setCookie("token", response?.data?.authorization?.token);
       console.log("Login successful", response.data);
       router.push("/user");
     } catch (error: any) {

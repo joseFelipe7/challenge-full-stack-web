@@ -11,7 +11,10 @@ router.get("/", (req: Request, res: Response) => {
   res.json({ message: "api runner" });
 });
 router.get("/secret", AuthMiddleware.execute, (req: Request, res: Response) => {
-  res.json({ message: "api runner" });
+  res.status(200).json({ message: "api runner" });
+});
+router.get("/logged", AuthMiddleware.execute, (req: Request, res: Response) => {
+  res.status(200).json({ message: "api runner" });
 });
 
 router.use("/auth", auth);
