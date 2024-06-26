@@ -16,7 +16,7 @@ export class PrismaUserRepository implements IUserRepository {
         password: user.props.password,
       },
     });
-    return user ? User.create(userCreate, userCreate.id) : null;
+    return user ? User.repositoryFromEntity(userCreate) : null;
   }
   async update(user: User): Promise<User | null> {
     const userUpdate = await prismaClient.user.update({
@@ -29,7 +29,7 @@ export class PrismaUserRepository implements IUserRepository {
         deleted_at: user.props.deletedAt,
       },
     });
-    return user ? User.create(userUpdate, userUpdate.id) : null;
+    return user ? User.repositoryFromEntity(userUpdate) : null;
   }
   async list(
     where: object,
@@ -62,7 +62,7 @@ export class PrismaUserRepository implements IUserRepository {
         email: email,
       },
     });
-    return user ? User.create(user, user.id) : null;
+    return user ? User.repositoryFromEntity(user) : null;
   }
   async findById(id: string) {
     const user = await prismaClient.user.findUnique({
@@ -70,6 +70,6 @@ export class PrismaUserRepository implements IUserRepository {
         id: id,
       },
     });
-    return user ? User.create(user, user.id) : null;
+    return user ? User.repositoryFromEntity(user) : null;
   }
 }

@@ -5,6 +5,7 @@ import { patientRepository } from "@/repositories/IPatientRepository";
 
 type AttributesReturn = {
   type: string;
+  id: string;
   attributes: {
     name: string;
     document: string;
@@ -12,30 +13,41 @@ type AttributesReturn = {
     phone: string;
     gender: string;
     birthdate: Date;
+    createdAt?: Date;
+    updatedAt?: Date;
     deletedAt?: Date;
   };
 };
 
 export class PatientResponse {
+  id: string;
   name: string;
   document: string;
   email?: string | null;
   phone: string;
   gender: string;
   birthdate: Date;
+  createdAt?: Date;
+  updatedAt?: Date;
+  deletedAt?: Date;
   private static type: string = "patient";
 
   constructor(patient: Patient) {
+    this.id = patient.id;
     this.name = patient.props.name;
     this.email = patient.props.email;
     this.document = patient.props.document;
     this.phone = patient.props.phone;
     this.gender = patient.props.gender;
     this.birthdate = patient.props.birthdate;
+    this.updatedAt = patient.props.updatedAt;
+    this.deletedAt = patient.props.deletedAt;
   }
   static index(patient: Patient): AttributesReturn {
+    console.log(patient);
     return {
       type: this.type,
+      id: patient.id,
       attributes: {
         name: patient.props.name,
         email: patient.props.email,
@@ -43,6 +55,8 @@ export class PatientResponse {
         phone: patient.props.phone,
         gender: patient.props.gender,
         birthdate: patient.props.birthdate,
+        createdAt: patient.props.createdAt,
+        updatedAt: patient.props.updatedAt,
       },
     };
   }
@@ -71,6 +85,7 @@ export class PatientResponse {
     return patients.map((item) => {
       return {
         type: this.type,
+        id: item.id,
         attributes: {
           name: item.name,
           email: item.email,
@@ -78,6 +93,8 @@ export class PatientResponse {
           phone: item.phone,
           gender: item.gender,
           birthdate: item.birthdate,
+          createdAt: item.created_at,
+          updatedAt: item.updated_at,
         },
       };
     });

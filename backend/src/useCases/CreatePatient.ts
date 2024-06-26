@@ -31,6 +31,6 @@ export class CreatePatient {
 
     const patientCreate = await this.patientRepository.create(patient);
 
-    return patient;
+    return patientCreate;
   }
 }

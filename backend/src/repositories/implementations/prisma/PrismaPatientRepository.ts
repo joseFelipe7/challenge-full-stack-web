@@ -19,7 +19,7 @@ export class PrismaPatientRepository implements IPatientRepository {
         gender: patient.props.gender,
       },
     });
-    return patient ? Patient.create(patientCreate, patientCreate.id) : null;
+    return patient ? Patient.repositoryFromEntity(patientCreate) : null;
   }
   async update(patient: Patient): Promise<Patient | null> {
     const patientUpdate = await prismaClient.patient.update({
@@ -32,10 +32,11 @@ export class PrismaPatientRepository implements IPatientRepository {
         birthdate: patient.props.birthdate,
         document: patient.props.document,
         phone: patient.props.phone,
+        gender: patient.props.gender,
         deleted_at: patient.props.deletedAt,
       },
     });
-    return patient ? Patient.create(patientUpdate, patientUpdate.id) : null;
+    return patient ? Patient.repositoryFromEntity(patientUpdate) : null;
   }
   async list(
     where: object,
@@ -68,7 +69,7 @@ export class PrismaPatientRepository implements IPatientRepository {
         document: document,
       },
     });
-    return patient ? Patient.create(patient, patient.id) : null;
+    return patient ? Patient.repositoryFromEntity(patient) : null;
   }
   async findById(id: string) {
     const patient = await prismaClient.patient.findUnique({
@@ -76,6 +77,6 @@ export class PrismaPatientRepository implements IPatientRepository {
         id: id,
       },
     });
-    return patient ? Patient.create(patient, patient.id) : null;
+    return patient ? Patient.repositoryFromEntity(patient) : null;
   }
 }

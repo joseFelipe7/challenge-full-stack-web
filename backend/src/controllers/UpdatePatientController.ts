@@ -34,6 +34,7 @@ export class UpdatePatientController {
           userId: request?.user?.id ?? "",
           registerId: patient.id,
         });
+        console.log(PatientResponse.index(patient));
         return response.status(200).json({
           data: PatientResponse.index(patient),
           message: "updated with success",
