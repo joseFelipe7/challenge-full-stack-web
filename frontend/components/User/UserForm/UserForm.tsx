@@ -67,7 +67,7 @@ export function UserForm() {
   };
 
   return (
-    <Form onSubmit={handleSubmit(onSubmit)} className="w-[260px]">
+    <Form onSubmit={handleSubmit(onSubmit)} className="w-full">
       <Input
         control={control}
         label="Nome"

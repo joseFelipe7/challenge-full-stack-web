@@ -11,6 +11,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import ButtonCore from "@/components/core/ButtonCore/ButtonCore";
+import { Select } from "@/components/core/Select/Select";
 import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
@@ -24,7 +25,10 @@ const formSchema = z.object({
     .regex(/^[a-zA-ZáÁéÉíÍóÓúÚâÂêÊîÎôÔûÛãÃõÕçÇ ]+$/, {
       message: "Nome não deve conter números ou símbolos",
     }),
-  phone: z.string().min(10).max(11),
+  phone: z
+    .string()
+    .min(10, { message: "Telefone deve ter pelo menos 10 caracteres" })
+    .max(11, { message: "Telefone não deve ter mais de 11 caracteres" }),
   birthdate: z.string(),
   // birthdate: z.date().max(new Date(), {
   //   message: "A data de nascimento não pode ser maior que a data de hoje.",
@@ -32,7 +36,7 @@ const formSchema = z.object({
   document: z.string().length(11, { message: "CPF deve conter 11 dígitos." }),
   gender: z.enum(["Female", "Male"], {
     required_error: "O gênero é obrigatório.",
-    invalid_type_error: 'O gênero deve ser "Female" ou "Male".',
+    invalid_type_error: 'O gênero deve ser "Feminino" ou "Masculino".',
   }),
 });
 
@@ -76,7 +80,7 @@ export function PatientForm() {
   };
 
   return (
-    <Form onSubmit={handleSubmit(onSubmit)} className="w-[260px]">
+    <Form onSubmit={handleSubmit(onSubmit)} className="w-full">
       <Input
         control={control}
         label="Nome"
@@ -107,11 +111,15 @@ export function PatientForm() {
         name="birthdate"
         placeholder="Insira sea data de nascimento"
       />
-      <Input
-        control={control}
-        label="Genero"
+      <Select
         name="gender"
-        placeholder="Insira seu genero"
+        control={control}
+        label="Gênero"
+        placeholder="Insira seu generot"
+        options={[
+          { value: "Female", label: "Feminino" },
+          { value: "Male", label: "Masculino" },
+        ]}
       />
 
       <Flex mt="6" justify="center" gap="3" direction="column">

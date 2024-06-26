@@ -13,7 +13,7 @@ const Index = () => {
     <>
       <NavbarCore />
 
-      <main className="ml-60 pt-16 max-h-screen overflow-auto">
+      <main className="ml-60 pt-16 max-h-screen overflow-auto p-12">
         <Flex mt="6" mb="6" justify="end" gap="3" className="w-full">
           <ButtonCore
             variant="outline"

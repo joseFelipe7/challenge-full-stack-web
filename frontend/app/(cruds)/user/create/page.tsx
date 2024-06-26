@@ -5,7 +5,7 @@ import { Box, Card, Flex, Heading, Text } from "@radix-ui/themes";
 
 const Index = () => {
   return (
-    <Card size="4">
+    <Card size="4" className="w-full">
       <Flex mb="5" justify="center" align="center" gap="2" direction="column">
         <Heading as="h3" size="6" trim="start">
           Usuário
