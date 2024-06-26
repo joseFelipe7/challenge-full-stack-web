@@ -10,8 +10,11 @@ const BtnSubmitForm = ({
     className?: string;
     label?: string;
   }) => (
-  <FormRadix.Submit asChild className={`w-full ${className}`}>
-    <ButtonCore size={"3"} className={`w-full`}>
+  <FormRadix.Submit
+    asChild
+    className={`w-full hover:cursor-pointer ${className}`}
+  >
+    <ButtonCore size={"3"} className={`w-full hover:cursor-pointer`}>
       {label}
     </ButtonCore>
   </FormRadix.Submit>

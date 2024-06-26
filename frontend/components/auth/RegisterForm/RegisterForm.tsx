@@ -6,11 +6,10 @@ import { Input } from "@/components/core/Input/Input";
 import axiosInstance from "@/src/lib/axiosInstance";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Flex } from "@radix-ui/themes";
+import { Flex, Link } from "@radix-ui/themes";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import ButtonCore from "@/components/core/ButtonCore/ButtonCore";
 import { useRouter } from "next/navigation";
 
 // Defina o esquema de validação com zod
@@ -22,16 +21,23 @@ const formSchema = z.object({
   password: z
     .string()
     .min(6, { message: "Senha deve ter pelo menos 6 caracteres" }),
+  name: z
+    .string()
+    .min(3, { message: "Nome deve ter pelo menos 3 caracteres" })
+    .regex(/^[a-zA-Z]+$/, {
+      message: "Nome não deve conter números ou símbolos",
+    }),
 });
 
 type FormValues = z.infer<typeof formSchema>;
 
-export function LoginForm() {
+export function RegisterForm() {
   const router = useRouter();
 
   const { handleSubmit, control } = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      name: "",
       email: "",
       password: "",
     },
@@ -39,25 +45,30 @@ export function LoginForm() {
   });
 
   const onSubmit = async (data: FormValues) => {
-    const { email, password } = data;
+    const { email, password, name } = data;
 
     try {
-      const response = await axiosInstance.post("/login", {
+      const response = await axiosInstance.post("/user", {
         email,
         password,
+        name,
       });
 
-      sessionStorage.setItem("token", response?.data?.authorization?.token);
-
-      console.log("Login successful", response.data);
+      console.log("Register successful", response.data);
     } catch (error: any) {
-      console.error("Error during login", error);
-      alert(`E-mail ou senha incorretos. ${error?.message}`);
+      console.error("Error during register", error);
+      alert(`Ocorreu um erro ao Criar a conta. ${error?.message}`);
     }
   };
 
   return (
     <Form onSubmit={handleSubmit(onSubmit)} className="w-[260px]">
+      <Input
+        control={control}
+        label="Nome"
+        name="name"
+        placeholder="Insira seu nome"
+      />
       <Input
         control={control}
         label="E-mail"
@@ -71,11 +82,19 @@ export function LoginForm() {
         placeholder="Insira a senha"
       />
 
-      <Flex mt="6" justify="center" gap="3">
-        <ButtonCore variant="outline" onClick={() => router.push("/register")}>
-          Não tenho conta
-        </ButtonCore>
-        <BtnSubmitForm label="Entrar" />
+      <Flex mt="6" justify="center" gap="3" direction="column">
+        <BtnSubmitForm label="Criar conta" />
+
+        <Link
+          href="#"
+          size="2"
+          onClick={(e) => {
+            e.preventDefault();
+            router.push("/login");
+          }}
+        >
+          Já possui conta?
+        </Link>
       </Flex>
     </Form>
   );

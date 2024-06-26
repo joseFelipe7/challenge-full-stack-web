@@ -1,8 +1,7 @@
 "use client";
 
-import { Suspense } from "react";
-
-import { UserForm } from "@/components/User/UserForm/UserForm";
+import { RegisterForm } from "@/components/auth/RegisterForm/RegisterForm";
+import { Box, Card, Flex, Heading, Text } from "@radix-ui/themes";
 
 type FormValues = {
   FirstName: string;
@@ -10,13 +9,20 @@ type FormValues = {
 
 const Index = () => {
   return (
-    <main className="flex min-h-screen flex-col items-center p-24">
-      <Suspense>
-        <h1>Register</h1>
+    <Card size="4">
+      <Flex mb="5" justify="center" align="center" gap="2" direction="column">
+        <Heading as="h3" size="6" trim="start">
+          MediCare
+        </Heading>
+        <Text as="div" color="gray" size="2">
+          Gerenciador de Pacientes
+        </Text>
+      </Flex>
 
-        <UserForm />
-      </Suspense>
-    </main>
+      <Box mb="5" position="relative">
+        <RegisterForm />
+      </Box>
+    </Card>
   );
 };
 
